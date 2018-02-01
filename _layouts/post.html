@@ -1,0 +1,24 @@
+---
+layout: default
+---
+
+<script type="text/javascript" src="{{ "/assets/gotop.js" | relative_url }}"></script>
+
+<div class="post">
+
+  <h1 class="post-title">{{ page.title }}</h1>
+  
+  <div class="post-info">
+
+    {% if page.date %}
+      <span>&nbsp;</span><time datetime="{{ page.date }}">{{ page.date | date: "%B %d, %Y" }}</time>
+    {% endif %}
+  </div>
+
+  {{ content }}
+
+</div>
+
+<a href="javascript:;" class="top" id="goTop">
+  <img width="30px" height="30px" src="{{ "/assets/gotop_arrow.svg" | relative_url }}" />
+</a>

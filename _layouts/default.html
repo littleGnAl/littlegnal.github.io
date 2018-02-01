@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+    <nav class="nav">
+      <div class="nav-container">
+        <a href="{{ site.baseurl }}/">
+          <h2 class="nav-title">{{ site.title }}</h2>
+        </a>
+        <ul>
+          {% if page.title != "About" %}
+            <li><a href="{{ '/about' | prepend: site.baseurl }}">About</a></li>
+          {% endif %}
+    
+          {% comment %} <li><a href="{{ site.baseurl }}/">Posts</a></li> {% endcomment %}
+        </ul>
+    </div>
+  </nav>
+
+    <main>
+      {{ content }}
+    </main>
+
+    <footer>
+      <span>
+        &copy; <time datetime="{{ site.time }}">{{ site.time | date: '%Y' }}</time> {{ site.author.name }}
+      </span>
+    </footer>
+  </body>
+</html>
