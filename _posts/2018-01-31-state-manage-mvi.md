@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  "从状态管理(State Manage)到MVI（Model-View-Intent）"
 date: 2018-01-22 17:45:33 +0800
 ---
