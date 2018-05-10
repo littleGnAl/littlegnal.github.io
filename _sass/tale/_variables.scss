@@ -11,9 +11,9 @@ $shadow-color: rgba(0, 0, 0, .2);
 $code-color: #bf616a;
 
 // Fonts
-$serif-primary: Menlo, Monaco, monospace;
-$serif-secondary: Menlo, Monaco, monospace;
-$sans-serif: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
+$serif-primary: 'Google Sans', 'Helvetica Neue', arial, sans-serif;
+$serif-secondary: 'Google Sans', 'Helvetica Neue', arial, sans-serif;
+$sans-serif: 'Google Sans', 'Helvetica Neue', arial, sans-serif;
 $monospaced: Menlo, Monaco, monospace;
 
 @mixin box-sizing($type: border-box) {
