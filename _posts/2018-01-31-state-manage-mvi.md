@@ -638,7 +638,7 @@ class SummaryActionProcessorHolder(
 }
 ```
 
-这里不帖过多的代码了，感兴趣的兄弟可以查看我写的[demo（一个简单的增删改记帐app）](https://github.com/littleGnAl/Accounting)，演示了如何用状态管理的方式实现**MVI**，逻辑比较简单。
+这里不帖过多的代码了，感兴趣的兄弟可以查看我写的[demo（一个简单的增删改记帐app）](https://github.com/littleGnAl/Accounting/tree/accounting-mvi)，演示了如何用状态管理的方式实现**MVI**，逻辑比较简单。
 
 ### 测试
 编写单元测试的时候，我们只需要提供用户意图，借助RxJava的`TestObserver`，测试输出的状态是否符合我们预期的状态就可以了，如下面代码片段：
@@ -649,7 +649,7 @@ testObserver.assertValueAt(2, SummaryViewState(...))
 这消除了很多我们用**MVP**时对**View**的验证测试，如`Mockito.verify(view，times(1)).showFoo()`，因为我们不必处理实际代码的实现细节，使得单元测试的代码更具可读性，可理解性和可维护性。总所周知，在Android中UI测试是一件很头大的事，但状态是界面的描述，按照状态来展示界面，对界面显示正确性也有所帮助，但是要保证界面显示正确性，还是需要编写UI测试代码。
 
 ## 总结
-文章花了很大的篇幅介绍状态管理（其实就是代码比较多），因为状态管理理解了，**MVI**也理解了。强烈建议大家看下[Jake Wharton关于状态管理的演讲](https://www.youtube.com/watch?v=0IKHxjkgop4)（youtube），和[Hannes Dorfmann’s 关于MVI的系列博客](http://hannesdorfmann.com/android/mosby3-mvi-1)。感谢您阅读本文，希望对您有帮助。本文的[demo](https://github.com/littleGnAl/Accounting) 已上传到github，如果对本文有疑问，或者哪里说得不对的地方，欢迎在[github上实锤](https://github.com/littleGnAl/Accounting/issues)。
+文章花了很大的篇幅介绍状态管理（其实就是代码比较多），因为状态管理理解了，**MVI**也理解了。强烈建议大家看下[Jake Wharton关于状态管理的演讲](https://www.youtube.com/watch?v=0IKHxjkgop4)（youtube），和[Hannes Dorfmann’s 关于MVI的系列博客](http://hannesdorfmann.com/android/mosby3-mvi-1)。感谢您阅读本文，希望对您有帮助。本文的[demo](https://github.com/littleGnAl/Accounting/tree/accounting-mvi) 已上传到github，如果对本文有疑问，或者哪里说得不对的地方，欢迎在[github上实锤](https://github.com/littleGnAl/Accounting/issues)。
 
 ## 参考
 [Managing State with RxJava by Jake Wharton](https://www.youtube.com/watch?v=0IKHxjkgop4)  
