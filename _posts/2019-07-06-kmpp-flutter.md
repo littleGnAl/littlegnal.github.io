@@ -1,7 +1,8 @@
 ---
 title: Flutter + Kotlin Multiplatform, Write Once, Run Anywhere
-date: 2019-07-06 21:18:55 +0800
+date: 2019-07-06 22:01:28 +0800
 ---
+
 ## Motivation
 [Flutter](https://flutter.dev/)是Google 2017年推出的跨平台框架，拥有**Fast Development**，**Expressive and Flexible UI**，**Native Performance**等特点。Flutter使用[Dart](https://dart.dev/)作为开发语言，Android和iOS项目可以共用一套Dart代码，很多人迫不及待的尝试，包括我，但在学习的过程中，同时在思考以下的问题：
 
@@ -15,7 +16,7 @@ date: 2019-07-06 21:18:55 +0800
 
 于是我有一个大胆的想法，同时使用Flutter和Kotlin Multiplatform，虽然使用不同的语言（Dart/Kotlin），不同平台公用一套代码逻辑实现。使用Kotlin Multiplatform编写公用逻辑，然后在Android/iOS上使用`MethodChannel/FlutterMethodChannel`供Flutter调用公用逻辑。
 
-![kmpp+flutter](https://github.com/littleGnAl/screenshot/blob/master/kmpp-flutter/kmpp+flutter.png?raw=true)
+![kmpp+flutter](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp+flutter.png)
 
 接下来以实现公用的数据库操作逻辑为例，来简单描述如何使用Flutter和Kotlin Multiplatform达到`Write Once，Run Anywhere`。
 
@@ -423,7 +424,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
 |    Android                             | iOS                            |
 :---------------------------------------:|:-------------------------------:
-![android](https://github.com/littleGnAl/screenshot/blob/master/kmpp-flutter/kmpp_flutter_android.gif?raw=true)   |   ![ios](https://github.com/littleGnAl/screenshot/blob/master/kmpp-flutter/kmpp_flutter_ios.gif?raw=true)
+![android](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp_flutter_android.gif)   |   ![ios](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp_flutter_ios.gif)
 
 ## Unit Test
 为了保证代码质量和逻辑正确性unit test是必不可少的，对于`common` module代码，我们只要在`commonTest`中写一套unit test就可以了，当然有时候我们需要为不同平台编写不同的test case。在[Demo](https://github.com/littleGnAl/accounting-multiplatform/tree/littlegnal/blog-kmpp-flutter)里我主要使用[MockK](https://github.com/mockk/mockk)来mock数据，但是遇到一些问题，在`Kotlin/Native`无法识别`MockK`的引用，对于这个问题，我提了一个[issue](https://github.com/mockk/mockk/issues/322)，目前还在处理中。
