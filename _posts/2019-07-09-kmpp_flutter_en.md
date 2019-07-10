@@ -4,7 +4,7 @@ date: 2019-07-09 14:29:22 +0800
 ---
 
 ## Motivation
-[Flutter](https://flutter.dev/) is Google's cross-platform framework launched in 2017, featuring **Fast Development**, **Expressive and Flexible UI**, **Native Performance** and more. Flutter uses [Dart](https://dart.dev/) as the development language. Android and iOS projects can share the same Dart code. Many people can't wait to try it, including me, but during the learning process, I am thinking about the following questions:
+[Flutter](https://flutter.dev/) is a Google's cross-platform framework launched in 2017, featuring **Fast Development**, **Expressive and Flexible UI**, **Native Performance** and more. Flutter uses [Dart](https://dart.dev/) as the development language, Android and iOS projects can share the same Dart code. Many people can't wait to try it, including me, but during the learning process, I am thinking about the following questions:
 
 * Flutter is excellent, but relatively new. At present, not all third-party SDKs support Flutter (especially in China), when using third-party SDKs, we often need to write native code integration logic, which requires us to write separate integration code for Android and iOS separately.
 
@@ -14,7 +14,7 @@ date: 2019-07-09 14:29:22 +0800
 
 Finally, the problem can be attributed to the fact that native code cannot be reused, which leads us to implement the same code logic for different frameworks. So is there a framework for reusing native code? The answer is yes. [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html) is a feature of Kotlin (currently experimental) with the goal of using Kotlin: *Sharing code between platforms*.
 
-So I have a bold idea to use both Flutter and Kotlin Multiplatform, although different languages (Dart/Kotlin) are used, but different frameworks share the same code logic implementations. Write common logic using Kotlin Multiplatform, then use `MethodChannel`/`FlutterMethodChannel` on Android/iOS for Flutter to call the common logic.
+Hence, I have a bold idea to use both Flutter and Kotlin Multiplatform, although different languages (Dart/Kotlin) are used, different frameworks share the same code logic implementations. Write common logic using Kotlin Multiplatform, then use `MethodChannel`/`FlutterMethodChannel` on Android/iOS for Flutter to call the common logic.
 
 ![kmpp+flutter](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp+flutter.png)
 
@@ -23,7 +23,7 @@ Let's take an example of implementing common database logic and briefly describe
 ## Kotlin Multiplatform
 We use [Sqldelight](https://github.com/square/sqldelight) to implement common database logic, then serialize the query results into json strings via [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) and pass them to Flutter via `MethodChannel`/`FlutterMethodChannel`.
 
-The project structure of Flutter is as follows:
+The project structure of Flutter is shown as below:
 ```
 |
 |__android
@@ -187,10 +187,10 @@ class SqlDelightManager(
 }
 ```
 
-Because the `Result` object in `MethodChannel#setMethodHandler` is different from the `FlutterResult` object in `FlutterMethodChannel#setMethodHandler`, we define the `result` function in `SqlDelightManager#methodCall` to pass the result to the outside for external processing.
+Because the `Result` object in `MethodChannel#setMethodHandler` is different from the `FlutterResult` object in `FlutterMethodChannel#setMethodHandler`, we define the `result` function in `SqlDelightManager#methodCall` as external processing in the form of callbacks.
 
 ### Use `SqlDelightManager` on Android
-In order to use `SqlDelightManager` in Android projects, refer to the official documentation [Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html), we need to first add the dependency of `common` module to the `app` module:
+In order to use `SqlDelightManager` in Android projects, refer to the official documentation [Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html), we need to add the dependency of `common` module to the `app` module firstly:
 
 ```gradle
 implementation project(":common")
@@ -231,7 +231,7 @@ Referring to the [Multiplatform Project: iOS and Android](https://kotlinlang.org
 * *Build Setting* -> Add *Framework Search Paths*
 * *Build Phases* -> Add *Run Script*
 
-One thing different from the official documentation is that the path to store frameworks is different, because the Flutter project structure puts the `build` path of the `android` project to the root directory, so the path of the frameworks should be `$(SRCROOT)/../build/xcode- frameworks`. You can check it in `android/build.gradle`:
+The only different from the official documentation is that the path to store frameworks is different. Because the Flutter project structure puts the `build` path of the `android` project to the root directory, so the path of the frameworks should be `$(SRCROOT)/../build/xcode- frameworks`. You can check it in `android/build.gradle`:
 
 ```gradle
 rootProject.buildDir = '../build'
@@ -240,7 +240,7 @@ subprojects {
 }
 ```
 
-Now, you can call the Kotlin code of the `common` module in Swift. Referring to the official documentation, [Writing custom platform-specific code](https://flutter.dev/docs/development/platform-integration/platform-channels), we implement the `FlutterMethodChannel` in `AppDelegate.swift` and call the `SqlDelightManager#methodCall` function:
+Afterwards, you can call the Kotlin code of the `common` module in Swift. Referring to the official documentation, [Writing custom platform-specific code](https://flutter.dev/docs/development/platform-integration/platform-channels), we implement the `FlutterMethodChannel` in `AppDelegate.swift` and call the `SqlDelightManager#methodCall` function:
 
 ```swift
 @UIApplicationMain
@@ -418,7 +418,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
 ```
 
-Finally done, let’s take a look at what the app looks like:
+DONE! Let’s take a look at what the APP looks like:
 
 |    Android                             | iOS                            |
 :---------------------------------------:|:-------------------------------:
