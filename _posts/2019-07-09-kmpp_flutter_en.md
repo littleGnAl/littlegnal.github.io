@@ -8,11 +8,11 @@ date: 2019-07-09 14:29:22 +0800
 
 * Flutter is excellent, but relatively new. At present, not all third-party SDKs support Flutter (especially in China), when using third-party SDKs, we often need to write native code integration logic, which requires us to write separate integration code for Android and iOS separately.
 
-* When we want to integrate Flutter into our project, it is a bit impractical to replace all the pages at once, but when we need some page integration, we will need to rewrite the common logic such as database operations using Dart, because other pages also need using database operation logic, there is no way to keep only Dart's implementation code, so the same database operation logic will need to provide different framework implementations such as: `Dao.kt`, `Dao.swift`, `Dao.dart`. Of course, you can use the `MethodChannel`/`FlutterMethodChannel` provided by Flutter to directly call the logic of the native code, but if the database operation logic needs to be modified, we still have to modify the code logic of the different frameworks at the same time.
+* When we want to integrate Flutter into our project, it is a bit impractical to replace all the pages at once, but when we need some pages integration, we will need to use Dart for rewriting the common logic such as database operations logic. Because other pages also need using database operation logic, there is no way to keep only Dart's implementation code. Thus, the same database operation logic will need to provide different frameworks implementations such as: `Dao.kt`, `Dao.swift`, `Dao.dart`. Of course, you can use the `MethodChannel`/`FlutterMethodChannel` provided by Flutter to directly call the logic of the native code, but if the database operation logic needs to be modified, we still have to modify the code logic of the different frameworks at the same time.
 
-* If your team has an internal SDK that is available for different projects (Android and iOS), but some apps need to integrate Flutter, the maintainer will need to provide the Flutter/Android/iOS SDK separately which increases the maintenance and implementation costs of the SDK maintainer.
+* If your team has an internal SDK that is available for different projects (Android and iOS), but some APPs need to integrate Flutter, the maintainer will need to provide the Flutter/Android/iOS SDK separately which increases the maintenance and implementation costs of the SDK maintainer.
 
-Finally, the problem can be attributed to the fact that native code cannot be reused, which leads us to implement the same code logic for different frameworks. So is there a framework for reusing native code? The answer is yes. [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html) is a feature of Kotlin (currently experimental) with the goal of using Kotlin: *Sharing code between platforms*.
+Therefore, the problem can be attributed to the fact that native code cannot be reused, which leads us to implement the same code logic for different frameworks. Is there any frameworks for reusing native code? Definitely YES! [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html) is a feature of Kotlin (currently experimental) with the goal of using Kotlin: *Sharing code between platforms*.
 
 Hence, I have a bold idea to use both Flutter and Kotlin Multiplatform, although different languages (Dart/Kotlin) are used, different frameworks share the same code logic implementations. Write common logic using Kotlin Multiplatform, then use `MethodChannel`/`FlutterMethodChannel` on Android/iOS for Flutter to call the common logic.
 
@@ -284,7 +284,7 @@ Afterwards, you can call the Kotlin code of the `common` module in Swift. Referr
 
 As you can see, except for the `MethodChannel`/`FlutterMethodChannel` object and the Kotlin/Swift syntax, we are calling the same `SqlDelightManager#methodCall` function and don't need to implement the same logic on Android/iOS.
 
-Here we have used Kotlin Multiplatform to reuse the native code, then we only need to use `MethodChannel` to call the corresponding method in Flutter.
+Finally, we have used Kotlin Multiplatform to reuse the native code. The only thing is to use `MethodChannel` to call the corresponding method in Flutter.
 
 ## Flutter
 Similarly, we implement the `AccountingRepository` class to encapsulate database logic in Flutter:
