@@ -231,7 +231,7 @@ Referring to the [Multiplatform Project: iOS and Android](https://kotlinlang.org
 * *Build Setting* -> Add *Framework Search Paths*
 * *Build Phases* -> Add *Run Script*
 
-The only different from the official documentation is that the path to store frameworks is different. Because the Flutter project structure puts the `build` path of the `android` project to the root directory, so the path of the frameworks should be `$(SRCROOT)/../build/xcode- frameworks`. You can check it in `android/build.gradle`:
+The only different from the official documentation is that the path to store frameworks is different. Because the Flutter project structure puts the `build` path of the `android` project to the root directory, the path of the frameworks should be `$(SRCROOT)/../build/xcode- frameworks`. You can check it in `android/build.gradle`:
 
 ```gradle
 rootProject.buildDir = '../build'
@@ -425,6 +425,6 @@ DONE! Let’s take a look at what the APP looks like:
 ![android](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp_flutter_android.gif)   |   ![ios](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp_flutter_ios.gif)
 
 ## TL;DR
-This article briefly demonstrates how to use both Flutter and Kotlin Multiplatform to achieve *Write Once Run Anywhere*. Personally think that Kotlin Multiplatform has a good prospect,  Google released the next generation UI development framework [Jetpack Compose](https://developer.android.com/jetpack/compose) on Google IO 2019, Apple brought us [SwiftUI](https://developer.apple.com/xcode/swiftui/) on WWDC 2019, which means that if someone unifies the APIs of these two frameworks, we can use Kotlin to write cross-platform code with native performance. The [Demo](https://github.com/littleGnAl/accounting-multiplatform/tree/littlegnal/blog-kmpp-flutter) of this article  has been uploaded to github, you can clone and study it if you are interested (although the code is very poor). Feel free to raise issue if you have any questions. Have Fun!
+This article briefly demonstrates how to use both Flutter and Kotlin Multiplatform to achieve *Write Once Run Anywhere*. As far as I am concerned, that Kotlin Multiplatform has a good prospect,  Google released the next generation UI development framework [Jetpack Compose](https://developer.android.com/jetpack/compose) on Google IO 2019, Apple brought us [SwiftUI](https://developer.apple.com/xcode/swiftui/) on WWDC 2019, which means that if someone unifies the APIs of these two frameworks, we can use Kotlin to write cross-platform code with native performance. The [Demo](https://github.com/littleGnAl/accounting-multiplatform/tree/littlegnal/blog-kmpp-flutter) of this article  has been uploaded to github, you can clone and study it if you are interested (although the code is very poor). Feel free to raise issue if you have any questions. Have Fun!
 
 Thank you so much for reading this article. I'm so sorry for my poor English, but I hope you can understand what I want to express.
