@@ -1,31 +1,29 @@
 ---
-title: Flutter + Kotlin Multiplatform, Write Once Run Anywhere
-date: 2019-07-06 22:01:28 +0800
+title: Flutter + Kotlin Multiplatform, Write Once Run Anywhere [EN]
+date: 2019-07-09 14:29:22 +0800
 ---
 
 ## Motivation
-[Flutter](https://flutter.dev/)是Google 2017年推出的跨平台框架，拥有**Fast Development**，**Expressive and Flexible UI**，**Native Performance**等特点。Flutter使用[Dart](https://dart.dev/)作为开发语言，Android和iOS项目可以共用一套Dart代码，很多人迫不及待的尝试，包括我，但在学习的过程中，同时在思考以下的问题：
+[Flutter](https://flutter.dev/) is a Google's cross-platform framework launched in 2017, featuring **Fast Development**, **Expressive and Flexible UI**, **Native Performance** and more. Flutter uses [Dart](https://dart.dev/) as the development language, Android and iOS projects can share the same Dart code. Many people can't wait to try it, including me, but during the learning process, I am thinking about the following questions:
 
-* Flutter很优秀，但相对来说还比较新，目前并不是所有的第三方SDK支持Flutter（特别是在国内），所以在使用第三方SDK时很多时候需要我们编写原生代码集成逻辑，需要Android和iOS分别编写不同的集成代码。
+* Flutter is excellent, but relatively new. At present, not all third-party SDKs support Flutter (especially in China), when using third-party SDKs, we often need to write native code integration logic, which requires us to write separate integration code for Android and iOS separately.
 
-* 项目要集成Flutter，一次性替换所有页面有点不太实际，但是部分页面集成的时候，会面临需要将数据库操作等公用逻辑使用Dart重写一遍的问题，因为原生的逻辑在其他的页面也需要用到，没办法做到只保留Dart的实现代码，所以很容易出现一套逻辑需要提供不同平台的实现如：`Dao.kt`， `Dao.swift`， `Dao.dart`。当然可以使用Flutter提供的`MethodChannel`/`FlutterMethodChannel`来直接调用原生代码的逻辑，但是如果数据库操作逻辑需要修改的时候，我们依然要同时修改不同平台的代码逻辑。
+* When we want to integrate Flutter into our project, it is a bit impractical to replace all the pages at once, but when we need some pages integration, we will need to use Dart for rewriting the common logic such as database operations logic. Because other pages also need using database operation logic, there is no way to keep only Dart's implementation code. Thus, the same database operation logic will need to provide different frameworks implementations such as: `Dao.kt`, `Dao.swift`, `Dao.dart`. Of course, you can use the `MethodChannel`/`FlutterMethodChannel` provided by Flutter to directly call the logic of the native code, but if the database operation logic needs to be modified, we still have to modify the code logic of the different frameworks at the same time.
 
-* 项目组里有內部的SDK，同时提供给不同项目（Android和iOS）使用，但是一些App需要集成Flutter，就需要SDK分别提供Flutter/Android/iOS的代码实现，这时需要同时维护三个SDK反而增加了SDK维护者的维护和实现成本。
+* If your team has an internal SDK that is available for different projects (Android and iOS), but some APPs need to integrate Flutter, the maintainer will need to provide the Flutter/Android/iOS SDK separately which increases the maintenance and implementation costs of the SDK maintainer.
 
-所以，最后可以把问题归结为原生代码无法复用，导致我们需要为不同平台提供同一代码逻辑实现。那么有没有能让原生代码复用的框架，答案是肯定的，[Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html)是Kotlin的一个功能（目前还在实验性阶段），其目标就是使用Kotlin：*Sharing code between platforms*。
+Therefore, the problem can be attributed to the fact that native code cannot be reused, which leads us to implement the same code logic for different frameworks. Is there any frameworks for reusing native code? Definitely YES! [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html) is a feature of Kotlin (currently experimental) with the goal of using Kotlin: *Sharing code between platforms*.
 
-于是我有一个大胆的想法，同时使用Flutter和Kotlin Multiplatform，虽然使用不同的语言（Dart/Kotlin），但不同平台共用一套代码逻辑实现。使用Kotlin Multiplatform编写公用逻辑，然后在Android/iOS上使用`MethodChannel`/`FlutterMethodChannel`供Flutter调用公用逻辑。
+Hence, I have a bold idea to use both Flutter and Kotlin Multiplatform, although different languages (Dart/Kotlin) are used, different frameworks share the same code logic implementations. Write common logic using Kotlin Multiplatform, then use `MethodChannel`/`FlutterMethodChannel` on Android/iOS for Flutter to call the common logic.
 
 ![kmpp+flutter](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp+flutter.png)
 
-接下来以实现公用的数据库操作逻辑为例，来简单描述如何使用Flutter和Kotlin Multiplatform达到*Write Once Run Anywhere*。
-
-*接下来的内容需要读者对Flutter和Kotlin Multiplatform有所了解。*
+Let's take an example of implementing common database logic and briefly describe how to achieve the goal of *Write Once Run Anywhere* using Flutter and Kotlin Multiplatform.
 
 ## Kotlin Multiplatform
-我们使用[Sqldelight](https://github.com/square/sqldelight)实现公用的数据库操作逻辑，然后通过[kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization)把查询结果序列化为json字符串，通过`MethodChannel`/`FlutterMethodChannel`传递到Flutter中使用。
+We use [Sqldelight](https://github.com/square/sqldelight) to implement common database logic, then serialize the query results into json strings via [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization) and pass them to Flutter via `MethodChannel`/`FlutterMethodChannel`.
 
-Flutter的目录结构如下面所示：
+The project structure of Flutter is shown as below:
 ```
 |
 |__android
@@ -34,9 +32,10 @@ Flutter的目录结构如下面所示：
 |__lib
 |__test
 ```
-其中`android`目录下是一个完整的Gradle项目，参照官方文档[Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html)，我们在`android`目录下创建一个`common` module，来存放公用的代码逻辑。
 
-### Gradle脚本
+The `android` directory is a Gradle project, refer to the official document [Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html), we create a `common` module in the `android` directory to store the common logic code.
+
+### Gradle script
 
 ```gradle
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
@@ -111,8 +110,8 @@ task packForXCode(type: Sync) {
 tasks.build.dependsOn packForXCode
 ```
 
-### 实现`AccountingRepository`
-在`common` module下创建`commonMain`目录，并在`commonMain`目录下创建`AccountingRepository`类用于封装数据库操作逻辑（这里不需要关心代码实现细节，只是简单的查询数据库结果，然后序列化为json字符串）。
+### Implement `AccountingRepository`
+Create the `commonMain` directory under the `common` module, and create the `AccountingRepository` class in the `commonMain` directory to encapsulate the database logic (you don't need to care about the code implementation details here, the logic here is simply querying the database results and then serializing them to json strings).
 
 ```kotlin
 class AccountingRepository(private val accountingDB: AccountingDB) {
@@ -155,7 +154,7 @@ class AccountingRepository(private val accountingDB: AccountingDB) {
 }
 ```
 
-到这里我们已经实现了公用的数据库操作逻辑，但是为了Android/iOS更加简单的调用数据库操作逻辑，我们把`MethodChannel#setMethodCallHandler`/`FlutterMethodChannel#setMethodCallHandler`中的调用逻辑进行简单的封装：
+We have implemented the common database logic here, but for Android/iOS to call the database logic more simply, we simply encapsulate the call logic of `MethodChannel#setMethodCallHandler`/`FlutterMethodChannel#setMethodCallHandler`:
 
 ```kotlin
 const val SQLDELIGHT_CHANNEL = "com.littlegnal.accountingmultiplatform/sqldelight"
@@ -188,16 +187,16 @@ class SqlDelightManager(
 }
 ```
 
-因为`MethodChannel#setMethodHandler`中`Result`和`FlutterMethodChannel#setMethodHandler`中`FlutterResult`对象不一样，所以我们在`SqlDelightManager#methodCall`定义`result` function以回调的形式让外部处理。
+Because the `Result` object in `MethodChannel#setMethodHandler` is different from the `FlutterResult` object in `FlutterMethodChannel#setMethodHandler`, we define the `result` function in `SqlDelightManager#methodCall` as external processing in the form of callbacks.
 
-### 在Android使用`SqlDelightManager`
-在Android项目使用`SqlDelightManager`，参考官方文档[Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html)，我们需要先在`app`目录下添加对`common` module的依赖：
+### Use `SqlDelightManager` on Android
+In order to use `SqlDelightManager` in Android projects, refer to the official documentation [Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html), we need to add the dependency of `common` module to the `app` module firstly:
 
 ```gradle
 implementation project(":common")
 ```
 
-参照官方文档[Writing custom platform-specific code](https://flutter.dev/docs/development/platform-integration/platform-channels)，我们在`MainActivity`实现`MethodChannel`并调用`SqlDelightManager#methodCall`:
+Referring to the official document [Writing custom platform-specific code](https://flutter.dev/docs/development/platform-integration/platform-channels), we implement the `MethodChannel` in the `MainActivity` and call the `SqlDelightManager#methodCall` function:
 
 ```kotlin
 class MainActivity: FlutterActivity() {
@@ -224,15 +223,15 @@ class MainActivity: FlutterActivity() {
 }
 ```
 
-### 在iOS使用`SqlDelightManager`
-继续参考[Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html)，让Xcode项目识别`common` module的代码，主要把`common` module生成的frameworks添加Xcode项目中，我简单总结为以下步骤：
+### Use `SqlDelightManager` on iOS
+Referring to the [Multiplatform Project: iOS and Android](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html). In order for the Xcode project to recognize the code of the `common` module, you need to add the frameworks generated by the `common` module to the Xcode project. I briefly summarize the following steps:
 
-* 运行`./gradlew :common:build`，生成*iOS frameworks*
-* *General* -> 添加*Embedded Binaries*
-* *Build Setting* -> 添加*Framework Search Paths*
-* *Build Phases* -> 添加*Run Script*
+* Run `./gradlew :common:build` to generate the *iOS frameworks*
+* *General* -> Add *Embedded Binaries*
+* *Build Setting* -> Add *Framework Search Paths*
+* *Build Phases* -> Add *Run Script*
 
-有一点跟官方文档不同的是，frameworks的存放目录不一样，因为Flutter项目结构把`android`项目的`build`文件路径放到根目录，所以frameworks的路径应该是`$(SRCROOT)/../build/xcode-frameworks`。可以查看`android/build.gradle`:
+The only different from the official documentation is that the path to store frameworks is different. Because the Flutter project structure puts the `build` path of the `android` project to the root directory, the path of the frameworks should be `$(SRCROOT)/../build/xcode- frameworks`. You can check it in `android/build.gradle`:
 
 ```gradle
 rootProject.buildDir = '../build'
@@ -241,7 +240,7 @@ subprojects {
 }
 ```
 
-这几步完成之后就可以在Swift里面调用`common` module的Kotlin代码了。参照官方文档[Writing custom platform-specific code](https://flutter.dev/docs/development/platform-integration/platform-channels)，我们在`AppDelegate.swift`实现`FlutterMethodChannel`并调用`SqlDelightManager#methodCall`（Swift代码全是靠Google搜出来的XD）：
+Afterwards, you can call the Kotlin code of the `common` module in Swift. Referring to the official documentation, [Writing custom platform-specific code](https://flutter.dev/docs/development/platform-integration/platform-channels), we implement the `FlutterMethodChannel` in `AppDelegate.swift` and call the `SqlDelightManager#methodCall` function:
 
 ```swift
 @UIApplicationMain
@@ -283,12 +282,12 @@ subprojects {
 }
 ```
 
-可以看到，除了`MethodChannel`/`FlutterMethodChannel`对象不同以及Kotlin/Swift语法不同，我们调用的是同一方法`SqlDelightManager#methodCall`，并不需要分别在Android/iOS上实现同一套逻辑。
+As you can see, except for the `MethodChannel`/`FlutterMethodChannel` object and the Kotlin/Swift syntax, we are calling the same `SqlDelightManager#methodCall` function and don't need to implement the same logic on Android/iOS.
 
-到这里我们已经使用了Kotlin Multiplatform实现原生代码复用了，然后我们只需在Flutter使用`MethodChannel`调用相应的方法就可以了。
+Finally, we have used Kotlin Multiplatform to reuse the native code. The only thing is to use `MethodChannel` to call the corresponding method in Flutter.
 
 ## Flutter
-同样的我们在Flutter中也实现`AccountingRepository`类封装数据库操作逻辑：
+Similarly, we implement the `AccountingRepository` class to encapsulate database logic in Flutter:
 
 ```dart
 class AccountingRepository {
@@ -328,7 +327,7 @@ class AccountingRepository {
 }
 ````
 
-简单使用[BLoC](https://flutter.dev/docs/development/data-and-backend/state-mgmt/options#bloc--rx)来调用`AccountingRepository`的方法：
+Simply use [BLoC](https://flutter.dev/docs/development/data-and-backend/state-mgmt/options#bloc--rx) to call the `AccountingRepository` functions:
 
 ```dart
 class SummaryBloc {
@@ -368,7 +367,7 @@ class SummaryBloc {
 
 ```
 
-在Widget中使用BLoC：
+Use BLoC in Widgets:
 
 ```dart
 class SummaryPage extends StatefulWidget {
@@ -419,17 +418,13 @@ class _SummaryPageState extends State<SummaryPage> {
 
 ```
 
-完结撒花，最后我们来看看项目的运行效果：
-
+DONE! Let’s take a look at what the APP looks like:
 
 |    Android                             | iOS                            |
 :---------------------------------------:|:-------------------------------:
 ![android](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp_flutter_android.gif)   |   ![ios](https://raw.githubusercontent.com/littleGnAl/screenshot/master/kmpp-flutter/kmpp_flutter_ios.gif)
 
-## Unit Test
-为了保证代码质量和逻辑正确性Unit Test是必不可少的，对于`common` module代码，我们只要在`commonTest`中写一套Unit Test就可以了，当然有时候我们需要为不同平台编写不同的测试用例。在[Demo](https://github.com/littleGnAl/accounting-multiplatform/tree/littlegnal/blog-kmpp-flutter)里我主要使用[MockK](https://github.com/mockk/mockk)来mock数据，但是遇到一些问题，在Kotlin/Native无法识别`MockK`的引用。对于这个问题，我提了一个[issue](https://github.com/mockk/mockk/issues/322)，目前还在处理中。
-
 ## TL;DR
-跨平台这个话题在现在已经是老生常谈了，很多公司很多团队都希望使用跨平台技术来提高开发效率，降低人力成本，但开发的过程中会发现踩的坑越来越多，很多时候并没有达到当初的预期，个人认为跨平台的最大目标是代码复用，*Write Once Run Anywhere*，让多端的开发者共同实现和维护同一代码逻辑，减少沟通导致实现的差异和多端代码实现导致的差异，使代码更加健壮便于维护。
+This article briefly demonstrates how to use both Flutter and Kotlin Multiplatform to achieve *Write Once Run Anywhere*. As far as I am concerned, Kotlin Multiplatform has a good prospect.  Not only Google released the next generation UI development framework [Jetpack Compose](https://developer.android.com/jetpack/compose) on Google IO 2019, but Apple also brought us [SwiftUI](https://developer.apple.com/xcode/swiftui/) on WWDC 2019, which means that if someone unifies the APIs of these two frameworks, we can use Kotlin to write cross-platform code with native performance. The [Demo](https://github.com/littleGnAl/accounting-multiplatform/tree/littlegnal/blog-kmpp-flutter) of this article  has been uploaded to github, you can clone and study it if you are interested (although the code is very poor). Feel free to raise issue if you have any questions. Have Fun!
 
-本文简单演示了如何使用Flutter和Kotlin Multiplatform来达到*Write Once Run Anywhere*的效果。个人认为Kotlin Multiplatform有很大的前景，Kotlin Multiplatform还支持JS平台，所以公用的代码理论上还能提供给小程序使用（希望有机会验证这个猜想）。在今年的Google IO上Google发布了下一代UI开发框架[Jetpack Compose](https://developer.android.com/jetpack/compose)，苹果开发者大会上苹果为我们带来了[SwiftUI](https://developer.apple.com/xcode/swiftui/)，这意味着如果把这2个框架的API统一起来，我们可以使用Kotlin来编写拥有Native性能的跨平台的代码。[Demo](https://github.com/littleGnAl/accounting-multiplatform/tree/littlegnal/blog-kmpp-flutter)已经上传到github，感兴趣的可以clone下来研究（虽然写的很烂）。有问题可以在github上提issue。Have Fun！
+Thank you so much for reading this article. I'm so sorry for my poor English, but I hope you can understand what I want to express.
