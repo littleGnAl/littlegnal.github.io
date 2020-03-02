@@ -12,20 +12,17 @@ main {
 main,
 footer,
 .nav-container {
-  display: block;
-  margin: 0 auto;
-  max-width: 800px;
-  width: 80%;
+  max-width: 1000px;
+  width: 60%;
 }
 
 .nav {
-  box-shadow: 0 2px 2px -2px $shadow-color;
   overflow: auto;
 
   &-container {
-    margin: 1rem auto;
     position: relative;
-    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 
   &-title {
@@ -34,6 +31,7 @@ footer,
     display: inline-block;
     margin: 0;
     padding-right: .2rem;
+    margin-left: 40px;
 
     &:hover,
     &:focus {
@@ -45,7 +43,7 @@ footer,
     list-style-type: none;
     margin: 1rem 0 0;
     padding: 0;
-    text-align: center;
+    text-align: start;
   }
 
   li {
@@ -86,13 +84,13 @@ footer,
 }
 
 footer {
-  font-family: $serif-secondary;
-  padding: 2rem 0;
-  text-align: center;
+  margin-left: 40px;
+  margin-bottom: 40px;
+  text-align: start;
+  // font-size: 18px;
 
   span {
     color: $default-color;
-    font-size: .8rem;
   }
 }
 

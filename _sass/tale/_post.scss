@@ -1,20 +1,19 @@
 .post {
-  padding: 3rem 0;
+  padding: 40px;
 
   &-info {
     color: $default-tint;
-    font-family: $serif-secondary;
+    font-family: $default-font-family;;
     letter-spacing: 0.5px;
-    text-align: center;
-    margin-bottom: 20px;
+    text-align: start;
   }
 
   &-title {
     color: $default-shade;
-    font-family: $sans-serif;
-    font-size: 3rem;
+    font-family: $default-font-family;
+    font-size: 50px;
     margin: 1rem 0;
-    text-align: center;
+    text-align: start;
   }
 
   &-line {
@@ -40,7 +39,7 @@
   img + em {
     color: $default-tint;
     display: block;
-    font-family: $sans-serif;
+    font-family: $default-font-family;
     font-size: 0.9rem;
     font-style: normal;
     text-align: center;

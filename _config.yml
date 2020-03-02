@@ -14,7 +14,6 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: littlegnal's blog
-email: tearjeaker@hotmail.com
 description: littlegnal's blog
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
@@ -26,9 +25,9 @@ timezone: '+0800'
 author:
   name: littlegnal
   url: ""
-  email: tearjeaker@hotmail.com
 
 # Build settings
+highlighter: rouge
 markdown: kramdown
 plugins:
   - jekyll-feed
