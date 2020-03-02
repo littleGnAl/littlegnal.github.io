@@ -10,6 +10,5 @@ permalink: /about/
 
 **github:** [https://github.com/littleGnAl](https://github.com/littleGnAl)  
 **掘金:** [https://juejin.im/user/55fbf91fddb263b5602b2a98](https://juejin.im/user/55fbf91fddb263b5602b2a98)  
-**email:**  tearjeaker@hotmail.com  
 
 

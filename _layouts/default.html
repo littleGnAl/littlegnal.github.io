@@ -10,7 +10,7 @@
           <h2 class="nav-title">{{ site.title }}</h2>
         </a>
         <ul>
-          {% if page.title != "ABOUT" %}
+          {% if page.title == "littlegnal's blog" %}
             <li><a href="{{ '/about' | prepend: site.baseurl }}">about</a></li>
           {% endif %}
     
@@ -23,10 +23,5 @@
       {{ content }}
     </main>
 
-    <footer>
-      <span>
-        &copy; <time datetime="{{ site.time }}">{{ site.time | date: '%Y' }}</time> {{ site.author.name }}
-      </span>
-    </footer>
   </body>
 </html>

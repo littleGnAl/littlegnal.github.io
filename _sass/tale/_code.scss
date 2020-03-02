@@ -1,37 +1,36 @@
 pre,
 code {
-  font-family: $monospaced;
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
 
 code {
-  background-color: $grey-3;
+  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 3px;
   color: $code-color;
-  font-size: 85%;
-  padding: .25em .5em;
-}
-
-pre {
-  margin: 0 0 1rem;
+  padding: 2px 4px;
+  border-radius: 4px;
 }
 
 pre code {
   background-color: transparent;
-  color: inherit;
-  font-size: 100%;
+  color: #333333;
+  font-size: 14px;
   padding: 0;
 }
 
 .highlight {
-  background-color: $grey-3;
   border-radius: 3px;
   line-height: 1.4;
   margin: 0 0 1rem;
-  padding: 1rem;
 
   pre {
-    margin-bottom: 0;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+
     overflow-x: auto;
+    overflow-wrap: normal;
+    white-space: pre;
+    padding: 9.5px;
   }
 
   .lineno {
