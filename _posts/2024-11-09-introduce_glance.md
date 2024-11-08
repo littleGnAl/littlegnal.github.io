@@ -1,11 +1,11 @@
 ---
-title: Flutter线上卡顿检测库：glance
+title: glance：Flutter移动端(Android/iOS)线上卡顿检测库
 date: 2024-11-09 00:00:00 +0800
 ---
 
 ## Motivation
 
-受到[thread_collect_stack_example](https://github.com/mraleph/thread_collect_stack_example)项目的启发，我开发了一个线上卡顿监控库：[glance](https://github.com/littleGnAl/glance)。这篇文章主要记录一下开发过程中的一些想法，并帮助对[glance](https://github.com/littleGnAl/glance)感兴趣的朋友了解它的基本原理。
+受到[thread_collect_stack_example](https://github.com/mraleph/thread_collect_stack_example)项目的启发，我开发了一个Flutter移动端(Android/iOS)线上卡顿检测库：[glance](https://github.com/littleGnAl/glance)。这篇文章主要记录一下开发过程中的一些想法，并帮助对[glance](https://github.com/littleGnAl/glance)感兴趣的朋友了解它的基本原理。
 
 ## 为什么要线上卡顿检测
 
