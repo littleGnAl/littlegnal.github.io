@@ -1,5 +1,5 @@
 ---
-title: Flutter线上卡顿检测库：glance
+title: glance: Flutter移动端(Android/iOS)线上卡顿监控库
 date: 2024-11-09 00:00:00 +0800
 ---
 
