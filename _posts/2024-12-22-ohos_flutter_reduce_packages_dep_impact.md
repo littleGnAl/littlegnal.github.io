@@ -10,7 +10,8 @@ date: 2024-12-22 00:00:00 +0800
 ## 鸿蒙Flutter packages依赖
 在适配一个新的平台的时候，我们希望尽可能减少对现有项目的修改，特别是各种依赖，减少和避免影响到其他平台（如 Android、iOS、macOS、Windows、Web 等）。适配鸿蒙Flutter也如此，但由于[鸿蒙Flutter packages](https://gitee.com/openharmony-sig/flutter_packages)基于[一年前的commit](https://github.com/flutter/packages/commit/b8b84b2304f00a3f93ce585cc7a30e1235bde7a0)，按照[官方的依赖方式](https://gitee.com/openharmony-sig/flutter_packages#%E4%BA%8C-%E6%8F%92%E4%BB%B6%E5%BA%93%E4%BD%BF%E7%94%A8)，相当于我们必须回滚某些依赖版本。这可能导致我们需要对现有支持的平台进行重新适配，这自然不是我们想要做的。
 
-庆幸[Flutter官方packages](https://github.com/flutter/packages)都改造成了[Federated plugin结构](https://docs.flutter.dev/packages-and-plugins/developing-packages#federated-plugins)，这让我们在适配鸿蒙Flutter时，可以仅引入鸿蒙Flutter packages原生层（ets代码）的实现，而不需要影响其他平台。以`path_provider`为例：
+庆幸[Flutter官方packages](https://github.com/flutter/packages)都改造成了[Federated plugin结构](https://docs.flutter.dev/packages-and-plugins/developing-packages#federated-plugins)，这让我们在适配鸿蒙Flutter时，可以仅引入鸿蒙Flutter packages原生层（ets代码）的实现，而不需要影响其他平台。以`path_provider`为例，其原生层的实现在[path_provider_ohos
+](https://gitee.com/openharmony-sig/flutter_packages/tree/master/packages/path_provider/path_provider_ohos) package中，我们仅需额外引入`path_provider_ohos`即可：
 
 pubspec.yaml
 
