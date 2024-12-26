@@ -2,11 +2,4 @@
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
 
-@use 'tale/variables' as *;
-@use 'tale/base' as *;
-@use 'tale/code' as *;
-@use 'tale/post' as *;
-@use 'tale/syntax' as *;
-@use 'tale/layout' as *;
-@use 'tale/pagination' as *;
-@use 'tale/catalogue' as *;
+@import 'tale';
