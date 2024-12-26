@@ -1,3 +1,5 @@
+@use 'tale/variables' as *;
+
 .pagination {
   border-top: .5px solid $grey-2;
   font-family: $serif-secondary;
