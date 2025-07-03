@@ -1,5 +1,5 @@
 ---
-title: "Flutter Add-to-app profiling指北"
+title: "Flutter Add-to-app profiling"
 date: 2025-07-03 00:00:00 +0800
 ---
 
