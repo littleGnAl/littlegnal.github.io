@@ -5,8 +5,6 @@ date: 2025-08-29 00:00:00 +0800
 
 ## Motivation
 
-这是一篇很简短的文章，主要记录如何在[Flutter Add-to-app场景](https://docs.flutter.dev/add-to-app)下进行profiling的方法。希望这些内容能帮到你。
-
 你可能不知道Flutter iOS profile模式下是可以看到dart代码的堆栈的
 
 但是使用instrument不方便，对测试同学不友好，有没有不需要instrument的方法
@@ -24,6 +22,7 @@ perfetto的效果
 ![](../assets/images/2025-08-29-flutter-ios-offline-jank-analyze-btrace/jank-fun-perfetto.png)
 
 可以看到使用btrace我们可以使用perfetto很好的分析慢方法，方便我们定位Flutter的卡顿问题。
+> 这个做法需要Flutter主线程UI线程合并的情况下才能用（Flutter SDK >= 3.32.x）
 
 android需要等到btrace支持native 方法才可以。
 
@@ -64,6 +63,34 @@ else:
         dur_ms = r.dur / 1e6
         # Pretty print: "<method_name> (<duration ms>)"
         print(f"{name:<{max_name_len}} ({dur_ms:8.3f} ms)")
+```
+
+```
+...
+RendererBinding.dispatchEvent                            (2001.540 ms)
+GestureBinding.dispatchEvent                             (2001.540 ms)
+GestureBinding.handleEvent                               (2001.540 ms)
+PointerRouter.route                                      (2001.540 ms)
+PointerRouter._dispatchEventToRoutes                     (2001.540 ms)
+LinkedHashMapMixin.forEach (#2)                          (2001.540 ms)
+PointerRouter._dispatchEventToRoutes.<anonymous closure> (2001.540 ms)
+PointerRouter._dispatch                                  (2001.540 ms)
+PrimaryPointerGestureRecognizer.handleEvent (#2)         (2001.540 ms)
+PrimaryPointerGestureRecognizer.handleEvent (#3)         (2001.540 ms)
+BaseTapGestureRecognizer.handlePrimaryPointer            (2001.540 ms)
+BaseTapGestureRecognizer._checkUp                        (2001.540 ms)
+TapGestureRecognizer.handleTapUp                         (2001.540 ms)
+GestureRecognizer.invokeCallback                         (2001.540 ms)
+InkResponseState.handleTap (#2)                          (2001.540 ms)
+InkResponseState.handleTap                               (2001.540 ms)
+MyHomePageState._incrementCounter                        (2001.540 ms)
+MyHomePageState._incrementCounter (#2)                   (2001.540 ms)
+sleep                                                    (1977.250 ms)
+ProcessUtils._sleep                                      (1977.250 ms)
+stub CallAutoScopeNative                                 (1977.250 ms)
+sleep                                                    (1969.110 ms)
+ProcessUtils._sleep                                      (1969.110 ms)
+stub CallBootstrapNative                                 (1969.110 ms)
 ```
 
 ## 这又完了？
