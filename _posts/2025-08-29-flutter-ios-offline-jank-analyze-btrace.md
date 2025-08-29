@@ -100,8 +100,6 @@ stub CallBootstrapNative                                 (1969.110 ms)
 
 测试前开启btrace，测试完之后将perfetto文件交给AI Agent分析，让Agent去处理报表，创建工单。
 
-好了，剩下的留给你们异想天开。
-
 ## TL;DR
 感谢btrace团队的无私奉献，让广大开发者受益。真心希望这个工具能一直维护下去。
 
