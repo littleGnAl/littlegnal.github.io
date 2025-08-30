@@ -4,35 +4,31 @@ date: 2025-08-29 00:00:00 +0800
 ---
 
 ## Motivation
-
-你可能不知道Flutter iOS profile模式下是可以看到dart代码的堆栈的
-
-但是使用instrument不方便，对测试同学不友好，有没有不需要instrument的方法
+你可能知道Flutter iOS profile模式下跑Instruments是可以看到dart代码的堆栈的。但是使用Instruments对测试和非iOS开发同学不友好。试用了[btrace](https://github.com/bytedance/btrace)，个人感觉是个不错的工具，所以想分享一下。
 
 ## 使用btrace
 
-按照btrace的官方文档把btrace依赖到项目中，这里我使用flutter官方add2app的demo。
+按照[btrace](https://github.com/bytedance/btrace?tab=readme-ov-file#btrace-for-ios)的文档把btrace依赖到项目中（本文不赘述如何集成），这里我使用Flutter官方[add2app](https://github.com/flutter/samples/tree/main/add_to_app/multiple_flutters)的demo作为演示。
 
-我在代码中加一个耗时方法
+我在代码中加一个耗时方法：
 
 ![](../assets/images/2025-08-29-flutter-ios-offline-jank-analyze-btrace/jank-fun.png)
 
-perfetto的效果
+perfetto的效果：
 
 ![](../assets/images/2025-08-29-flutter-ios-offline-jank-analyze-btrace/jank-fun-perfetto.png)
 
-可以看到使用btrace我们可以使用perfetto很好的分析慢方法，方便我们定位Flutter的卡顿问题。
-> 这个做法需要Flutter主线程UI线程合并的情况下才能用（Flutter SDK >= 3.32.x）
+可以看到使用btrace我们可以在perfetto很好的分析方法耗时，方便我们定位Flutter的卡顿问题。
+> 这个做法需要Flutter主线程和UI线程合并的情况下才能用（Flutter SDK >= 3.32.x）
 
-android需要等到btrace支持native 方法才可以。
+
+对于Android的支持，目前来看，由于btrace暂时不支持Android Native C++采集，所以无法在Android上看到dart代码堆栈，但可以参考[这篇文章](https://littlegnal.github.io/2025-07-02/flutter_add-to-app-profiling-guide)开启采集build方法耗时。
 
 ## 这就完了？
 
-你可能不知道perftto文件是可以通过API去分析的，https://perfetto.dev/docs/analysis/trace-processor-python
+你可能不知道perfetto文件是可以通过API去分析的，见 https://perfetto.dev/docs/analysis/trace-processor-python。
 
-有了perfetto文件，我们可以通过perftto官方的sdk去分析了，详细怎么使用这里不展开。
-
-下面例子查询耗时超过1s的方法
+有了perfetto文件，我们可以通过perfetto Python API获取耗时函数堆栈。下面例子查询耗时超过1s的方法：
 
 ```py
 # Open the trace file (replace the path with your actual trace file)
@@ -64,7 +60,7 @@ else:
         # Pretty print: "<method_name> (<duration ms>)"
         print(f"{name:<{max_name_len}} ({dur_ms:8.3f} ms)")
 ```
-
+查询结果：
 ```
 ...
 RendererBinding.dispatchEvent                            (2001.540 ms)
@@ -93,18 +89,17 @@ ProcessUtils._sleep                                      (1969.110 ms)
 stub CallBootstrapNative                                 (1969.110 ms)
 ```
 
-## 这又完了？
-现在什么最火？AI，无容置疑了。我们可以写一个AI Agent自动去做这件事，生成各种格式的报表，图，上报内部平台，自动创建工单。。。。。。
+同时可以结合AI，写一个AI Agent去分析堆栈，生成各种格式的报表/图，上报内部平台，自动创建工单。。。。。。于是我们可以有这样一个流程：
 
-于是我们可以有这样一个流程
-
-测试前开启btrace，测试完之后将perfetto文件交给AI Agent分析，让Agent去处理报表，创建工单。
+测试前开启btrace，测试完之后将perfetto文件自动交给AI Agent分析，让Agent去处理报表，创建工单。
 
 ## TL;DR
-感谢btrace团队的无私奉献，让广大开发者受益。真心希望这个工具能一直维护下去。
+借助btrace，我们可以同时采集原生（Android/iOS）和Flutter（目前只支持Flutter iOS）的堆栈，便于我们线下分析函数耗时。
 
+感谢btrace团队的无私奉献，让广大开发者受益。
 
 ### 参考
-- https://perfetto.dev/docs/analysis/trace-processor-python
 - https://github.com/bytedance/btrace
+- https://perfetto.dev/docs/analysis/trace-processor-python
+- https://littlegnal.github.io/2025-07-02/flutter_add-to-app-profiling-guide
 
