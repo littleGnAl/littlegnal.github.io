@@ -43,6 +43,13 @@ android {
 
 ![](../assets/images/2025-07-03-flutter_add-to-app-profiling-guide/show-attach-log.png)
 
+### 使用perfetto
+
+我们还可以用[perfetto](https://ui.perfetto.dev/)来profiling，Flutter DevTools的信息可以在perfetto上查看。例如我们可以profiling widget的build方法耗时，将`debugProfileBuildsEnabled`和`debugProfileBuildsEnabledUserWidgets`设置为`true`，在perfetto的效果：
+
+![](../assets/images/2025-07-03-flutter_add-to-app-profiling-guide/profiling-widget-build-on-perfetto.png)
+
+
 ### 参考
 - https://developer.android.com/studio/profile#build-and-run
 - https://docs.flutter.dev/tools/devtools/performance
