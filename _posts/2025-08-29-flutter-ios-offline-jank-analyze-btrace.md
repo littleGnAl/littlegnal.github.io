@@ -1,6 +1,6 @@
 ---
 title: "分享一个使用btrace线下分析Flutter iOS卡顿的思路"
-date: 2025-08-29 00:00:00 +0800
+date: 2025-08-31 00:00:00 +0800
 ---
 
 ## Motivation
@@ -26,7 +26,7 @@ perfetto的效果：
 
 ## 这就完了？
 
-你可能不知道perfetto文件是可以通过API去分析的，见 https://perfetto.dev/docs/analysis/trace-processor-python。
+你可能不知道perfetto文件是可以通过API去分析的，见 [https://perfetto.dev/docs/analysis/trace-processor-python](https://perfetto.dev/docs/analysis/trace-processor-python)。
 
 有了perfetto文件，我们可以通过perfetto Python API获取耗时函数堆栈。下面例子查询耗时超过1s的方法：
 
@@ -96,10 +96,10 @@ stub CallBootstrapNative                                 (1969.110 ms)
 ## TL;DR
 借助btrace，我们可以同时采集原生（Android/iOS）和Flutter（目前只支持Flutter iOS）的堆栈，便于我们线下分析函数耗时。
 
-感谢btrace团队的无私奉献，让广大开发者受益。
+感谢btrace团队的开源，让广大开发者受益。
 
 ### 参考
-- https://github.com/bytedance/btrace
-- https://perfetto.dev/docs/analysis/trace-processor-python
-- https://littlegnal.github.io/2025-07-02/flutter_add-to-app-profiling-guide
+- [https://github.com/bytedance/btrace](https://github.com/bytedance/btrace)
+- [https://perfetto.dev/docs/analysis/trace-processor-python](https://perfetto.dev/docs/analysis/trace-processor-python)
+- [https://littlegnal.github.io/2025-07-02/flutter_add-to-app-profiling-guide](https://littlegnal.github.io/2025-07-02/flutter_add-to-app-profiling-guide)
 
