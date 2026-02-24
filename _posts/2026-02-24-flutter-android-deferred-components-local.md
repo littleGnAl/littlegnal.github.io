@@ -1,29 +1,47 @@
 ---
 title: "Flutter Android如何延迟加载代码"
-date: 2026-02-23 00:00:00 +0800
+date: 2026-02-24 00:00:00 +0800
 ---
 
 ## Motivation
-在add-to-app多引擎场景下，随着业务越来越多，代码越来越多，首次创建引擎十分耗时，我们的APP光libapp.so已经90+MB，在低端机首次加载大概2s，但是在add-to-app场景中，不是所有flutter页面都要一开始就加载显示，而是打开flutter页面才会展示，所以一开始就一次性加载所有代码显然不合理，那有没有办法将不需要的代码模块延迟加载呢，答案是肯定的。flutter官方支持deferred- components，但这个功能官方是为了支持google play dynamic module功能的，在我们的场景中，我们并不需要一定要远程下发，我们更需要的是代码延迟加载，而不是初始化时一次性加载。庆幸官方有考虑允许开发者自定义扩展，这篇文章就是探讨如何实现本地延迟加载代码（.so）。
+在 add-to-app 的多引擎场景下，随着业务变多，代码量也会持续增长，首次创建引擎的耗时会越来越明显。我们 APP 的 `libapp.so` 已经有 90+MB，在低端机上首次加载大约需要 2 秒，并且增加内存占用。
+
+但在 add-to-app 场景里，并不是所有 Flutter 页面都会在启动时立刻展示，通常是进入某个 Flutter 页面时才真正需要加载对应代码。因此，在初始化阶段一次性加载全部代码显然不太合理。
+
+那有没有办法把暂时不需要的代码模块延迟加载呢？答案是肯定的。Flutter 官方支持 [ Deferred-components ](https://docs.flutter.dev/perf/deferred-components)，这个能力本质上是基于 Dart 的 deferred import：构建时会把部分 Dart AOT 代码拆分成独立的 loading units（一般后缀为`part.so`），运行时再按需加载。这样就可以避免在初始化阶段一次性加载全部代码。
+
+不过，官方这套能力默认主要是为 [Google Play Dynamic Feature Modules](https://developer.android.com/guide/playcore/feature-delivery) 设计的，并且局限了在Google Play渠道使用。对我们的场景来说，并不一定需要远程下发能力，我们更需要的是“本地代码按需加载”，而不是在初始化时一次性把所有代码都加载进来。
 
 ## 开启Deferred-components
-见https://docs.flutter.dev/perf/deferred-components，目前官方的实现只支持google play dynamic module功能，且只支持appbundle。深入代码后发现，只需要设置gradle属性deferred-components就能开启deferred components。
-见
+
+Flutter 支持通过 Dart 的 `deferred` 关键字做延迟加载，但在 Android 上，官方默认方案是基于 [Google Play Dynamic Feature Modules](https://developer.android.com/guide/playcore/feature-delivery)，并且完整发布流程主要围绕 AAB（App Bundle）展开。
+
+不过深入代码后可以发现，是否进入 Deferred-components 的构建流程，本质上是通过配置项控制的。只要相关配置生效，Flutter tool 就会进入 Deferred-components 的构建路径，生成 split AOT 产物。
+
+见：  
 https://github.com/flutter/flutter/blob/7ff0723e08fd3f40bf866c164da8f1895ad41e71/packages/flutter_tools/gradle/src/main/kotlin/FlutterPlugin.kt#L618
 
-实验下来确实如此
+实验下来，开启这个能力的关键点主要有两个：
 
-### 添加flag
-- 在android/gradle.properties添加deferred-components=true
-- 在pubspec.yaml添加deferred-components:
+- 在 `android/gradle.properties` 中添加 `deferred-components=true`
+- 在 `pubspec.yaml` 中添加 `deferred-components:`
+
+配置完成后，即使构建 APK，也可以开启 Deferred-components 的相关能力。
+
+> 以下是官方 [gallery](https://github.com/flutter/gallery/tree/main) 构建 APK 的效果  
+
+![](../assets/images/2026-02-23-flutter-android-deferred-components-local/libapp.so-deferred.png)
+
 
 ### 实现DeferredComponentManager
-如何实现本地延迟加载，借鉴
+
+如何实现“本地延迟加载”？可以参考官方 `PlayStoreDeferredComponentManager` 的实现思路，把 Google Play Core 相关逻辑去掉，仅保留本地查找和加载 `.so` 的部分。
+
+下面是一个可行的示例：
 
 ```kt
-class LocalDeferredImportManager(
-    private val context: Context,
-
+class LocalDeferredLibraryManager(
+    private val context: Context
 ) : DeferredComponentManager {
 
     private val flutterApplicationInfo: FlutterApplicationInfo = ApplicationInfoLoader.load(context)
@@ -152,12 +170,7 @@ class LocalDeferredImportManager(
 }
 ```
 
-## 效果
-前
-![](../assets/images/2026-02-23-flutter-android-deferred-components-local/libapp.so.png)
-
-![](../assets/images/2026-02-23-flutter-android-deferred-components-local/libapp.so-deferred.png)
-后
-
 ## 结论
-这是一个可行的方案，但是它使用非标准的官方实现，需要斟酌是否符合自己项目。
+这是一个可行方案：复用 Flutter Deferred-components 的整体机制，把 `libapp.so` 拆分成多个 `*.part.so`，并通过自定义 `DeferredComponentManager` 在本地按需加载，从而避免初始化阶段一次性加载全部代码，优化 add-to-app 多引擎场景下的首开耗时及内存占用。
+
+不过，它本质上仍然属于“非官方标准路径”的自定义实现，是否适合落地到项目中，还需要结合自身项目的实现方式以及长期维护成本来评估。
