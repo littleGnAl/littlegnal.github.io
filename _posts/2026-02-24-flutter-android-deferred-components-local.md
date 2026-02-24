@@ -39,7 +39,7 @@ https://github.com/flutter/flutter/blob/7ff0723e08fd3f40bf866c164da8f1895ad41e71
 
 下面是一个可行的示例：
 
-```kt
+```kotlin
 class LocalDeferredLibraryManager(
     private val context: Context
 ) : DeferredComponentManager {
